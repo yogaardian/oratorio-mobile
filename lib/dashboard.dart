@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
+// Konstanta Warna (Ambil dari login.dart untuk konsistensi)
+const Color kPrimary = Color(0xFF004D40);
+const Color kFooterText = Color(0xFFA7A7A7);
+const Color kFooterBg = Color(0xFF121212);
+
 // --- Assets Paths ---
-// Ganti placeholder dengan path lokal yang benar sesuai struktur baru
 const String assetHero = 'assets/images/hero-bg2.jpg';
 const String assetBorobudur = 'assets/images/fav-dest-section-candi-borobudur.jpg';
 const String assetMonas = 'assets/images/fav-dest-section-tugu-monas.jpg';
@@ -33,16 +37,20 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Mengambil data user yang dikirim dari Login
+    final Map<String, dynamic>? userData = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final String username = userData?['username'] ?? 'Pengguna';
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           // Header / AppBar
-          const _CustomHeader(),
+          _CustomHeader(username: username), // Kirim username ke Header
           
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                const _HeroSection(),
+                _HeroSection(username: username), // Kirim username ke Hero Section
                 const _FavoriteDestinationsSection(),
                 const _ARTorioSection(),
                 const _VRTorioSection(),
@@ -57,32 +65,31 @@ class DashboardPage extends StatelessWidget {
 }
 
 class _CustomHeader extends StatelessWidget {
-  const _CustomHeader();
+  final String username;
+  const _CustomHeader({required this.username});
 
   @override
   Widget build(BuildContext context) {
-    // Menggunakan SliverAppBar agar terasa native dan bisa di-scroll
     return SliverAppBar(
       pinned: true,
       floating: false,
       backgroundColor: Colors.white,
-      foregroundColor: const Color(0xFF004D40),
+      foregroundColor: kPrimary,
       elevation: 4.0,
-      title: const Text(
-        'ORATORIO',
-        style: TextStyle(
+      title: Text(
+        'Hi, $username!', 
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
-          letterSpacing: 1.5,
-          fontSize: 24,
+          letterSpacing: 1.0,
+          fontSize: 20,
+          color: kPrimary,
         ),
       ),
       actions: [
-        // Dummy User/Menu Dropdown for Mobile
         IconButton(
-          icon: const Icon(Icons.person_outline),
+          icon: const Icon(Icons.logout),
+          tooltip: 'Logout',
           onPressed: () {
-            // Aksi Logout atau navigasi ke profile
-            // Mengarahkan ke /login dan menghapus rute sebelumnya, seperti fungsionalitas Logout
             Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
           },
         ),
@@ -92,30 +99,32 @@ class _CustomHeader extends StatelessWidget {
 }
 
 class _HeroSection extends StatelessWidget {
-  const _HeroSection();
+  final String username;
+  const _HeroSection({required this.username});
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
-      height: screenHeight * 0.5, // 50% tinggi layar untuk kesan mobile modern
+      height: screenHeight * 0.5,
       decoration: BoxDecoration(
         image: DecorationImage(
-          // Menggunakan Image.asset untuk gambar lokal
           image: const AssetImage(assetHero),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
         ),
       ),
-      child: const Center(
+      child: Center(
         child: Padding(
-          padding: EdgeInsets.all(32.0),
+          padding: const EdgeInsets.all(32.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                'Jelajahi Bersama Oratorio',
+              // ➡️ PERBAIKAN: Mengurangi ukuran dan ketebalan font sapaan
+              const SizedBox(height: 12),
+              const Text(
+                'Jelajahi Bersama Oratorio. Hidupkan Kembali Sejarah. Jelajahi Budaya Indonesia di Mana Saja.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -123,15 +132,7 @@ class _HeroSection extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 12),
-              Text(
-                'Hidupkan Kembali Sejarah. Jelajahi Budaya Indonesia di Mana Saja.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 16,
-                ),
-              ),
+              const SizedBox(height: 12),
             ],
           ),
         ),
@@ -165,7 +166,6 @@ class _DestinationCard extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            // Menggunakan Image.asset untuk gambar lokal
             Image.asset(
               imageSrc,
               fit: BoxFit.cover,
@@ -216,7 +216,7 @@ class _FavoriteDestinationsSection extends StatelessWidget {
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF004D40),
+              color: kPrimary,
             ),
           ),
           const SizedBox(height: 24),
@@ -253,7 +253,7 @@ class _ARTorioSection extends StatelessWidget {
       padding: const EdgeInsets.all(24.0),
       child: Column(
         children: [
-          const _SectionTitle(title: 'AR TORIO', color: Color(0xFF004D40)),
+          const _SectionTitle(title: 'AR TORIO', color: kPrimary),
           const SizedBox(height: 16),
           const Text(
             'Jelajahi Warisan Budaya dengan Augmented Reality',
@@ -281,7 +281,7 @@ class _ARTorioSection extends StatelessWidget {
                   icon: const Icon(Icons.auto_awesome_rounded, color: Colors.white),
                   label: const Text('Lihat Semua Koleksi'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF004D40),
+                    backgroundColor: kPrimary,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -334,7 +334,7 @@ class _VRTorioSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const _SectionTitle(title: 'VR TORIO', color: Color(0xFF004D40)),
+          const _SectionTitle(title: 'VR TORIO', color: kPrimary),
           const SizedBox(height: 24),
           GridView.builder(
             shrinkWrap: true,
@@ -359,7 +359,6 @@ class _VRTorioSection extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: 
-                          // Menggunakan Image.asset untuk gambar lokal
                           Image.asset(
                             item['image'] as String,
                             fit: BoxFit.cover,
@@ -397,7 +396,7 @@ class _FooterSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black,
+      color: kFooterBg,
       padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 24.0),
       child: Column(
         children: [
@@ -406,10 +405,9 @@ class _FooterSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(onPressed: () {}, icon: const Icon(Icons.facebook, color: Colors.white, size: 28)),
-              // FIX: Mengganti Icons.pinterest (yang tidak ada) dengan Icons.share
               IconButton(onPressed: () {}, icon: const Icon(Icons.share, color: Colors.white, size: 28)),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.videocam, color: Colors.white, size: 28)), // YouTube Placeholder
-              IconButton(onPressed: () {}, icon: const Icon(Icons.photo_camera, color: Colors.white, size: 28)), // Instagram Placeholder
+              IconButton(onPressed: () {}, icon: const Icon(Icons.videocam, color: Colors.white, size: 28)), 
+              IconButton(onPressed: () {}, icon: const Icon(Icons.photo_camera, color: Colors.white, size: 28)), 
             ],
           ),
           const SizedBox(height: 32),
@@ -431,7 +429,7 @@ class _FooterSection extends StatelessWidget {
           // Copyright
           const Text(
             '© 2025 Oratorio, Inc.',
-            style: TextStyle(color: Colors.grey, fontSize: 12),
+            style: TextStyle(color: kFooterText, fontSize: 12),
           ),
         ],
       ),

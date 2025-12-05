@@ -31,9 +31,10 @@ dependencies:
   # Flutter SDK harus didefinisikan dengan sub-key 'sdk: flutter'
   flutter:
     sdk: flutter
+  http: ^1.1.0
   
   # HTTP harus didefinisikan sejajar dengan 'flutter:', bukan sebagai sub-key-nya.
-  http: ^0.13.6 # <-- Baris ini sekarang berada di indentasi yang benar
+  # <-- Baris ini sekarang berada di indentasi yang benar
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
